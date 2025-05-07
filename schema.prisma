@@ -1,0 +1,47 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model CountryCrimes {
+  id           Int      @id @default(autoincrement())
+  country      String   @unique
+  gis          Json
+  boundingbox  Json
+  place_id     Int
+  cities       CityCrimes[]
+}
+
+model CityCrimes {
+  id           Int      @id @default(autoincrement())
+  city         String   @unique
+  gis          Json
+  boundingbox  Json
+  countryId    Int
+  place_id     Int
+  zones        Zone[]
+  country      CountryCrimes @relation(fields: [countryId], references: [id])
+}
+
+model Zone {
+  id           Int      @id @default(autoincrement())
+  zone         String   @unique
+  gis          Json
+  boundingbox  Json
+  cityId       Int
+  place_id     Int
+  locations    Location[]
+  city         CityCrimes @relation(fields: [cityId], references: [id])
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  crimeTime DateTime
+  typeCrime String
+  zoneId    Int
+  zone      Zone     @relation(fields: [zoneId], references: [id])
+}
