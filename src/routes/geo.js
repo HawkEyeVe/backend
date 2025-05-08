@@ -29,18 +29,8 @@ async function fetchLocationData(query) {
   }
 }
 
-router.get("/search", async (req, res) => {
-  try {
-    const query = req.query.q;
-    const locationData = await fetchLocationData(query);
-    res.json(locationData);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 router.post("/addLocation", async (req, res) => {
-  const { country, city, zone, crimeTime, typeCrime } = req.body;
+  const { country, city, zone, crimeTime, typeCrime, lat, lon } = req.body;
   try {
     if (!country) {
       throw new Error("Country is required");
@@ -90,7 +80,6 @@ router.post("/addLocation", async (req, res) => {
     }
 
     const zoneData = await fetchLocationData(`${country} + ${city}+  ${zone}`);
-    console.log("Zone Data:", zoneData);
     const zoneDocument = {
       zone: zoneData.display_name,
       gis: {
@@ -109,6 +98,10 @@ router.post("/addLocation", async (req, res) => {
     });
 
     const locationDocument = {
+      gis: {
+        type: "Point",
+        coordinates: [parseFloat(lon), parseFloat(lat)],
+      },
       crimeTime: new Date(crimeTime),
       typeCrime: typeCrime,
       zoneId: zoneDoc.id,
