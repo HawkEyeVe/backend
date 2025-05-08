@@ -67,7 +67,7 @@ router.post("/addLocation", async (req, res) => {
       throw new Error("City is required");
     }
 
-    const cityData = await fetchLocationData(city);
+    const cityData = await fetchLocationData(`${country} + ${city}`);
     const cityDocument = {
       city: cityData.display_name,
       gis: {
@@ -89,7 +89,8 @@ router.post("/addLocation", async (req, res) => {
       throw new Error("Zone is required");
     }
 
-    const zoneData = await fetchLocationData(zone);
+    const zoneData = await fetchLocationData(`${country} + ${city}+  ${zone}`);
+    console.log("Zone Data:", zoneData);
     const zoneDocument = {
       zone: zoneData.display_name,
       gis: {
@@ -183,5 +184,8 @@ router.get("/getLocation", async (req, res) => {
     console.error("Failed to connect to the database:", error);
   }
 })();
+
+// const test = await fetchLocationData("colombia+neiva+las granjas");
+// console.log(test);
 
 export default router;
