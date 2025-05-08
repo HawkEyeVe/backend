@@ -185,7 +185,10 @@ router.get("/getLocation", async (req, res) => {
   }
 })();
 
-// const test = await fetchLocationData("colombia+neiva+las granjas");
-// console.log(test);
+router.get("/awake", (req, res) => {
+  res.json({
+    message: "awakking",
+  });
+});
 
 export default router;
