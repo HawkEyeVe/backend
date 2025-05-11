@@ -1,3 +1,4 @@
+// Define the datasource and generator
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -7,6 +8,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Define the CountryCrimes model with relationships
 model CountryCrimes {
   id           Int      @id @default(autoincrement())
   country      String   @unique
@@ -16,6 +18,7 @@ model CountryCrimes {
   cities       CityCrimes[]
 }
 
+// Define the CityCrimes model with relationships
 model CityCrimes {
   id           Int      @id @default(autoincrement())
   city         String   @unique
@@ -27,6 +30,7 @@ model CityCrimes {
   country      CountryCrimes @relation(fields: [countryId], references: [id])
 }
 
+// Define the Zone model with relationships
 model Zone {
   id           Int      @id @default(autoincrement())
   zone         String   @unique
@@ -38,9 +42,10 @@ model Zone {
   city         CityCrimes @relation(fields: [cityId], references: [id])
 }
 
+// Define the Location model with relationships
 model Location {
   id        Int      @id @default(autoincrement())
-  gis          Json
+  gis       Json
   crimeTime DateTime
   typeCrime String
   zoneId    Int
